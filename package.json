@@ -1,0 +1,28 @@
+{
+  "name": "netflixnchill",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Elkrival/p2BE.git"
+  },
+  "author": "Ivan Trujillo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Elkrival/p2BE/issues"
+  },
+  "homepage": "https://github.com/Elkrival/p2BE#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "cors": "^2.7.1",
+    "express": "^4.14.0",
+    "mongodb": "^2.2.4",
+    "request": "^2.74.0",
+    "unirest": "^0.5.0"
+  }
+}
