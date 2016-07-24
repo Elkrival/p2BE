@@ -4,12 +4,14 @@ var mongodb = require("mongodb");
 var cors = require("cors");
 var bp = require("body-parser");
 var unirest = require('unirest');
-var md5 = require("md5");
 var nodemon = require("nodemon");
 var request = require("request");
 var ObjectID = mongodb.ObjectID;
 //UNOGS KEY
 var UNOG_SKEY = process.env.UNOGS_KEY;
+
+//naming the collection to store the database
+var NETFLIX_N_CHILL_COLLECTION = "netflix";
 //setting app variable to express
 var app = express();
 //nominating the express tools to use such as body-parser and cors
@@ -19,17 +21,32 @@ app.use(bp.urlencoded({ extended: true }));
 app.use(cors());
 //connecting mongo server to database, port 27017 also adding error handling which
 //starts after url line
-var url = "mongodb://heroku_h7pzl3ch:16rnh913p50naacq4n3oibq2r@ds029705.mlab.com:29705/heroku_h7pzl3ch";
-//var url = 'mongodb://localhost:27017/netflix'//also translates to mongoURL
+var url = 'mongodb://localhost:27017/netflix_project';
 // port that we will use mongo
-var MongoClient = mongodb.MongoClient;
-
+mongodb.MongoClient.connect(process.env.MONGODB_URL || url, function(err, database){
+    //error handling starts here
+    if(err){
+        console.log(err);
+        process.exit(1)
+    }
+    //naming our database
+    db = database;
+    console.log('DATABASE IS PUMPING');
+    //Starting server with express
+    var server = app.listen(process.env.PORT || 3000, function(){
+        var port = server.address().port;
+        console.log("RUNNING THE APP ON PORT", port)
+    });
+});
+//starting backend api calls and front end also error handling
+function handleError(res, reason, message, code){
+    console.log("ERROR: " + reason);
+    res.status(code || 500).json({"error ": message});
+}
 //HARD PART
 //We need to GET searches from API to save them
 //We need to create new events to our database
-// app.get('/', function(request, response){
-// response.json({"description": "netFlix API"});
-// });
+
 
 app.post('/netflix/search', function(req, res) {//for this to work REQ is before RES
     var inputValue = req.body.input;
@@ -42,27 +59,25 @@ app.post('/netflix/search', function(req, res) {//for this to work REQ is before
             console.log(res.send)
         })
 });
+app.get("netflix/new", function(res, req) {
 
-// app.get('netflix/list', function(requeset, response){
-//     MongoClient.connect(mongoUrl, function(err, db){
-//         var netflixCollection = db.collection('netflix');
-//         if (err){
-//             console.log('Unable to connect to the mongoDB server. ERROR:', err);
-//         }else if(result.length){
-//             console.log('Founc:', result);
-//             response.json(result);
-//         }else{
-//             console.log('No documents found');
-//             response.json('no movies found')
-//         }
-//         db.close(function(){
-//             console.log("database Closed");
-//         });
-//     })
-// })
-
-PORT = process.env.PORT || 80;
-
-app.listen(PORT, function(){
-    console.log('listening to events on a "port".')
+    // find all contacts and return them as an array
+    db.collection(NETFLIX_N_CHILL_COLLECTION).find({}).toArray(function(err, docs) {
+        if (err) {
+            handleError(res, err.message, "Couldn't get Chill movies");
+        } else {
+            res.status(200).json(docs);
+        }
+    });
+});
+app.post("netflix/new", function(req, res) {
+    var movieObj = req.body.data;
+    // insert one new contact
+    db.collection(NETFLIX_N_CHILL_COLLECTION).insertOne(movieObj, function(err, doc) {
+        if (err) {
+            handleError(res, err.message, "Failed to create new contact.");
+        } else {
+            res.status(201).json(doc.ops[0]);
+        }
+    });
 });
