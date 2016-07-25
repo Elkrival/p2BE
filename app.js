@@ -11,7 +11,7 @@ PORT = process.env.PORT || 3000;
 var UNOG_SKEY = process.env.UNOGS_KEY;
 
 //naming the collection to store the database
-var NETFLIX_N_CHILL_COLLECTION = "netflix";
+var NETFLIX_N_CHILL_COLLECTION = "/netflix";
 //setting app variable to express
 var app = express();
 //nominating the express tools to use such as body-parser and cors
