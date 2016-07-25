@@ -4,7 +4,6 @@ var mongodb = require("mongodb");
 var cors = require("cors");
 var bp = require("body-parser");
 var unirest = require('unirest');
-var nodemon = require("nodemon");
 var request = require("request");
 //var ObjectID = mongodb.ObjectID;
 PORT = process.env.PORT || 80;
