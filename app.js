@@ -6,7 +6,7 @@ var bp = require("body-parser");
 var unirest = require('unirest');
 var request = require("request");
 //var ObjectID = mongodb.ObjectID;
-PORT = process.env.PORT || 80;
+PORT = process.env.PORT || 3000;
 //UNOGS KEY
 var UNOG_SKEY = process.env.UNOGS_KEY;
 
