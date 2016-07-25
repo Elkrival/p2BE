@@ -6,7 +6,8 @@ var bp = require("body-parser");
 var unirest = require('unirest');
 var nodemon = require("nodemon");
 var request = require("request");
-var ObjectID = mongodb.ObjectID;
+//var ObjectID = mongodb.ObjectID;
+PORT = process.env.PORT || 80;
 //UNOGS KEY
 var UNOG_SKEY = process.env.UNOGS_KEY;
 
@@ -21,28 +22,22 @@ app.use(bp.urlencoded({ extended: true }));
 app.use(cors());
 //connecting mongo server to database, port 27017 also adding error handling which
 //starts after url line
-var url = 'mongodb://localhost:27017/netflix_project';
-// port that we will use mongo
-mongodb.MongoClient.connect(process.env.MONGODB_URL || url, function(err, database){
-    //error handling starts here
-    if(err){
-        console.log(err);
-        process.exit(1)
-    }
+// var url = 'mongodb://localhost:27017/netflix_project'; //local testing
+var url = 'mongodb://heroku_h7pzl3ch:16rnh913p50naacq4n3oibq2r@ds029705.mlab.com:29705/heroku_h7pzl3ch' //production
+//port that we will use mongo
+mongodb.MongoClient.connect(process.env.MONGODB_URI || url, function(err, database) {
+
     //naming our database
     db = database;
     console.log('DATABASE IS PUMPING');
-    //Starting server with express
-    var server = app.listen(process.env.PORT || 3000, function(){
-        var port = server.address().port;
-        console.log("RUNNING THE APP ON PORT", port)
-    });
+    //Starting server with express //these are heroku routes
+    // var server = app.listen(process.env.PORT || 3000, function(){
+    //     var port = server.address().port;
+    //     console.log("RUNNING THE APP ON PORT", port)
+    // });
+
 });
 //starting backend api calls and front end also error handling
-function handleError(res, reason, message, code){
-    console.log("ERROR: " + reason);
-    res.status(code || 500).json({"error ": message});
-}
 //HARD PART
 //We need to GET searches from API to save them
 //We need to create new events to our database
@@ -59,7 +54,7 @@ app.post('/netflix/search', function(req, res) {//for this to work REQ is before
             console.log(res.send)
         })
 });
-// app.get("netflix/new", function(res, req) {
+// app.get("/netflix/new", function(res, req) {
 //
 //     // find all contacts and return them as an array
 //     db.collection(NETFLIX_N_CHILL_COLLECTION).find({}).toArray(function(err, docs) {
@@ -70,7 +65,7 @@ app.post('/netflix/search', function(req, res) {//for this to work REQ is before
 //         }
 //     });
 // });
-
+//
 // });
 app.post("/netflix/new", function(req, res) {
 
@@ -87,3 +82,6 @@ app.post("/netflix/new", function(req, res) {
     });
 });
 
+app.listen(PORT, function(){
+    console.log('listen to events on a "port: ', PORT)
+});
