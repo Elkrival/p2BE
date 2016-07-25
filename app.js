@@ -59,21 +59,26 @@ app.post('/netflix/search', function(req, res) {//for this to work REQ is before
             console.log(res.send)
         })
 });
-app.get("netflix/new", function(res, req) {
+// app.get("netflix/new", function(res, req) {
+//
+//     // find all contacts and return them as an array
+//     db.collection(NETFLIX_N_CHILL_COLLECTION).find({}).toArray(function(err, docs) {
+//         if (err) {
+//             handleError(res, err.message, "Couldn't get Chill movies");
+//         } else {
+//             res.status(200).json(docs);
+//         }
+//     });
+// });
 
-    // find all contacts and return them as an array
-    db.collection(NETFLIX_N_CHILL_COLLECTION).find({}).toArray(function(err, docs) {
-        if (err) {
-            handleError(res, err.message, "Couldn't get Chill movies");
-        } else {
-            res.status(200).json(docs);
-        }
-    });
-});
-app.post("netflix/new", function(req, res) {
-    var movieObj = req.body.data;
+// });
+app.post("/netflix/new", function(req, res) {
+
+    var newMovie = req.body
+    console.log(newMovie)
+    console.log(typeof newMovie)
     // insert one new contact
-    db.collection(NETFLIX_N_CHILL_COLLECTION).insertOne(movieObj, function(err, doc) {
+    db.collection(NETFLIX_N_CHILL_COLLECTION).insertOne(newMovie, function(err, doc) {
         if (err) {
             handleError(res, err.message, "Failed to create new contact.");
         } else {
